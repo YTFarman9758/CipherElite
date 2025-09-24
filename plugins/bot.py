@@ -16,7 +16,19 @@
 #
 #  Thank you for respecting open-source software!
 # =============================================================================
+from flask import Flask
+import threading
 
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Cipher Elite Userbot is alive!"
+
+def run():
+    app.run(host="0.0.0.0", port=8000)
+
+threading.Thread(target=run).start()
 from telethon import TelegramClient, events, Button
 from config.config import Config
 from utils.decorators import rishabh_help
@@ -283,3 +295,4 @@ async def init_bot():
 
 async def register_commands():
     pass
+
