@@ -39,7 +39,7 @@ class PersonalAssistant:
         self.ai_config = ai_config  # Reference to centralized config
         self.data = {
             "config": {
-                "alive_name": os.environ.get("ALIVE_NAME", "Rishabh"),
+                "alive_name": os.environ.get("ALIVE_NAME", "HWL"),
                 "assistant_name": os.environ.get("ASSISTANT_NAME", "CipherAI"),
                 "pmpermit_pic": os.environ.get("PMPERMIT_PIC", DEFAULT_PMPERMIT_PIC),
                 "use_pic": True,
