@@ -94,7 +94,7 @@ def init(client):
     add_handler("ai_setup", commands, "AI Configuration Manager")
     
     @CipherElite.on(events.NewMessage(outgoing=True, pattern=r"\.setai(?:\s+(.+))?$"))
-    @rishabh()
+    
     async def _setai(event):
         """Set Gemini API key"""
         key = event.pattern_match.group(1)
@@ -121,7 +121,7 @@ def init(client):
             pass
     
     @CipherElite.on(events.NewMessage(outgoing=True, pattern=r"\.rmai$"))
-    @rishabh()
+    
     async def _rmai(event):
         """Remove AI key"""
         ai_config.set_api_key(None)
@@ -138,7 +138,7 @@ def init(client):
             pass
     
     @CipherElite.on(events.NewMessage(outgoing=True, pattern=r"\.aistatus$"))
-    @rishabh()
+    
     async def _aistatus(event):
         """Show AI status"""
         key = ai_config.get_api_key()
