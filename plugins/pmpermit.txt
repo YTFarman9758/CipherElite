@@ -179,7 +179,7 @@ def init(client):
         await assistant.handle_message(event)
 
     @CipherElite.on(events.NewMessage(pattern=r"\.(a|approve)($| )"))
-    @rishabh()
+    @Hlwso()
     async def approve_user(event):
         try:
             if event.is_private:
@@ -200,7 +200,7 @@ def init(client):
             await event.reply(f"Error: {str(e)}")
 
     @CipherElite.on(events.NewMessage(pattern=r"\.(da|disapprove)($| )"))
-    @rishabh()
+    @Hlwso()
     async def disapprove_user(event):
         try:
             if event.is_private:
@@ -220,7 +220,7 @@ def init(client):
             await event.reply(f"Error: {str(e)}")
 
     @CipherElite.on(events.NewMessage(pattern=r"\.listapproved$"))
-    @rishabh()
+    @Hlwso()
     async def list_approved(event):
         try:
             if not assistant.approved_users:
