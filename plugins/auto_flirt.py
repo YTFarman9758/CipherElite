@@ -19,7 +19,9 @@ FLIRT_SETTINGS = {
     "style": "playful",  # playful, romantic, confident, sweet
     "auto_reply": True,
     "blacklist": [],
+    "whitelist": {},  # {user_id: True/False}
     "response_delay": 0,  # seconds
+    "all_users_enabled": True,  # Global ON/OFF for all users
 }
 
 FLIRT_PROMPTS = {
@@ -114,11 +116,21 @@ class AutoFlirtManager:
         style_replies = fallbacks.get(self.settings["style"], fallbacks["playful"])
         return random.choice(style_replies)
     
+    def is_user_enabled(self, user_id: int) -> bool:
+        """Check if user is enabled for flirting"""
+        # Check global setting
+        if not self.settings["all_users_enabled"]:
+            # Global OFF - check whitelist
+            return self.settings["whitelist"].get(user_id, False)
+        else:
+            # Global ON - check blacklist
+            return user_id not in self.settings["blacklist"]
+    
     async def should_reply(self, user_id: int) -> bool:
         """Check if should reply to this user"""
         if not self.settings["auto_reply"]:
             return False
-        if user_id in self.settings["blacklist"]:
+        if not self.is_user_enabled(user_id):
             return False
         return True
 
@@ -191,18 +203,56 @@ async def cmd_flirt_style(event, style: str):
 async def cmd_flirt_blacklist(event, action: str, user_id: int = None):
     """Manage blacklist"""
     if action == "add" and user_id:
-        flirt_manager.settings["blacklist"].append(user_id)
+        if user_id not in flirt_manager.settings["blacklist"]:
+            flirt_manager.settings["blacklist"].append(user_id)
         await event.edit(f"✅ User {user_id} added to blacklist")
     elif action == "remove" and user_id:
         if user_id in flirt_manager.settings["blacklist"]:
             flirt_manager.settings["blacklist"].remove(user_id)
-            await event.edit(f"✅ User {user_id} removed from blacklist")
+        await event.edit(f"✅ User {user_id} removed from blacklist")
     elif action == "list":
         blacklist = flirt_manager.settings["blacklist"]
         if blacklist:
             await event.edit(f"🚫 Blacklist: {', '.join(map(str, blacklist))}")
         else:
             await event.edit("✅ Blacklist is empty")
+
+
+@sudo_only
+async def cmd_flirt_set_user(event, user_id: int, status: str):
+    """Set flirt status for specific user"""
+    status = status.lower()
+    
+    if status not in ["on", "off"]:
+        await event.edit("❌ Use: `.setflirtuser <user_id> on/off`")
+        return
+    
+    is_enabled = status == "on"
+    flirt_manager.settings["whitelist"][user_id] = is_enabled
+    
+    status_text = "✅ ON" if is_enabled else "❌ OFF"
+    await event.edit(f"User {user_id}: Flirt {status_text}")
+
+
+@sudo_only
+async def cmd_flirt_set_all(event, status: str):
+    """Set flirt status for all users"""
+    status = status.lower()
+    
+    if status not in ["on", "off"]:
+        await event.edit("❌ Use: `.setflirtall on/off`")
+        return
+    
+    flirt_manager.settings["all_users_enabled"] = status == "on"
+    
+    status_text = "✅ ON" if flirt_manager.settings["all_users_enabled"] else "❌ OFF"
+    
+    info = f"""
+🌍 **All Users Flirt Status: {status_text}**
+
+{'When ON: Bot replies to all users (except blacklist)' if status == 'on' else 'When OFF: Bot only replies to whitelisted users'}
+"""
+    await event.edit(info)
 
 
 @sudo_only
@@ -215,13 +265,21 @@ async def cmd_flirt_delay(event, seconds: int):
 @sudo_only
 async def cmd_flirt_status(event):
     """Show auto flirt status"""
+    all_status = "✅ ON" if flirt_manager.settings["all_users_enabled"] else "❌ OFF"
+    auto_status = "✅ ON" if flirt_manager.settings["auto_reply"] else "❌ OFF"
+    
+    whitelist_count = len([u for u, v in flirt_manager.settings["whitelist"].items() if v])
+    blacklist_count = len(flirt_manager.settings["blacklist"])
+    
     status_text = f"""
 🎭 **Auto Flirt Status**
 ━━━━━━━━━━━━━━━━━━━
-✅ Status: {'ON' if flirt_manager.settings['auto_reply'] else 'OFF'}
+✅ Auto Reply: {auto_status}
+🌍 All Users: {all_status}
 💕 Style: {flirt_manager.settings['style']}
 ⏰ Delay: {flirt_manager.settings['response_delay']}s
-🚫 Blacklist: {len(flirt_manager.settings['blacklist'])} users
+✅ Whitelisted: {whitelist_count} users
+🚫 Blacklisted: {blacklist_count} users
 """
     await event.edit(status_text)
 
@@ -231,6 +289,8 @@ PLUGIN_COMMANDS = {
     "flirttoggle": cmd_flirt_toggle,
     "flirtstyle": cmd_flirt_style,
     "flirtblacklist": cmd_flirt_blacklist,
+    "setflirtuser": cmd_flirt_set_user,
+    "setflirtall": cmd_flirt_set_all,
     "flirtdelay": cmd_flirt_delay,
     "flirtstatus": cmd_flirt_status,
 }
