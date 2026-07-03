@@ -16,7 +16,7 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-import google.generativeai as genai
+import google.genai as genai
 from telethon import events, functions
 from utils.utils import CipherElite
 from utils.decorators import rishabh
@@ -83,7 +83,7 @@ class PersonalAssistant:
                 "Keep responses strictly under 40 words."
             )
             self.model = genai.GenerativeModel(
-                "gemini-2.5-flash",
+                "gemini-2.0-flash",
                 system_instruction=system_instruction,
             )
             return True
