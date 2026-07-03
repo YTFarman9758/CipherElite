@@ -1,5 +1,5 @@
 # Use a lightweight Python image
-FROM python:3.10-slim-bookworm
+FROM python:3.11-slim-bookworm
 
 
 
@@ -41,7 +41,8 @@ RUN apt-get update && apt-get install -y \
 # Copy the requirements file and install Python modules
 COPY requirements.txt .
 RUN echo "📦 Installing Python Modules..."
-RUN pip3 install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel && \
+    pip3 install --no-cache-dir -r requirements.txt
 
 # Copy the rest of your bot's code into the container
 COPY . .
