@@ -12,7 +12,7 @@ ELITE_SESSION = os.getenv("ELITE_SESSION", "INVALID_SESSION")
 # Bot Settings
 ELITE_BOT_PREFIX = os.getenv("ELITE_BOT_PREFIX", ".")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "INVALID_BOT_TOKEN")
-ELITE_BOT_USERNAME = os.getenv("ELITE_BOT_USERNAME", "@InvalidBotUsername")
+ELITE_BOT_USERNAME = os.getenv("ELITE_BOT_USERNAME", "@NKDKOREANBOT")
 
 # Access Control
 SUDO_USERS = [int(x) for x in os.getenv("SUDO_USERS", "5470956337").split(",") if x.strip()]
