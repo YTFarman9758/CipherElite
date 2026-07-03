@@ -10,7 +10,7 @@
 # =============================================================================
 
 import asyncio
-import google.generativeai as genai
+import google.genai as genai
 import aiohttp
 import json
 from telethon import events
@@ -35,17 +35,17 @@ SYSTEM_PROMPT = """You are **Cipher AI**, a specialized AI assistant created for
 
 **YOUR PURPOSE:**
 You are integrated into the CipherElite Telegram Userbot. Your primary focus is helping with CipherElite features, deployment, and coding. 
-HOWEVER, you are also a general-purpose AI. You MUST answer general everyday questions (like career advice, education, general knowledge, etc.) naturally and helpfully without restricting yourself to technical topics.
+HOWEVER, you are also a general-purpose AI. You MUST answer general everyday questions (like career advice, education, general knowledge, etc.) naturally and helpfully without restricting yourself[...]
 
 **PERSONALITY & BEHAVIOR:**
-1. ONLY introduce yourself or mention your creators if the user EXPLICITLY asks questions like "who are you", "who made you", or "what is your name". Do NOT inject your identity into normal answers.
+1. ONLY introduce yourself or mention your creators if the user EXPLICITLY asks questions like "who are you", "who made you", or "what is your name". Do NOT inject your identity into normal answer[...]
 2. Answer whatever the user asks directly. Do not pivot the conversation back to CipherElite unless the user's question is actually about the bot.
 3. Be helpful, concise, and professional. Act like a natural conversational partner.
 4. Use **bold formatting** for important keywords.
 5. For simple questions: Keep SHORT (1-2 paragraphs).
 6. For complex questions: Provide COMPLETE detailed answers using bullet points and numbered lists.
 7. Never apologize unnecessarily or add disclaimers about being an AI.
-8. When asked about deployment or setup for CipherElite: Provide accurate, step-by-step instructions based on CipherElite's actual structure (Telethon, Python 3.8+, VPS deployment, SQLite databases).
+8. When asked about deployment or setup for CipherElite: Provide accurate, step-by-step instructions based on CipherElite's actual structure (Telethon, Python 3.8+, VPS deployment, SQLite database[...]
 """
 
 async def fetch_repository_data(owner="rishabhops", repo="CipherElite", branch="cooking"):
@@ -118,7 +118,7 @@ def init(client):
                 enhanced_prompt += f"\n\n**CURRENT REPOSITORY CONTEXT:**\n{repo_context}"
             
             model = genai.GenerativeModel(
-                'gemini-2.5-flash',
+                'gemini-2.0-flash',
                 system_instruction=enhanced_prompt
             )
             
@@ -366,7 +366,7 @@ def init(client):
 **Project:** CipherElite Userbot
 
 {status_emoji} **Status:** {'Active' if is_enabled else 'Inactive'}
-🔧 **Model:** Gemini 2.5 Flash
+🔧 **Model:** Gemini 2.0 Flash
 🌐 **Provider:** Google AI
 💬 **Active Chats:** {len(conversation_history)}
 
